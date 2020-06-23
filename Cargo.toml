@@ -9,3 +9,5 @@ edition = "2018"
 [dependencies]
 termion = "*"
 dirs = "2.0.2"
+signal-hook = "0.1.16"
+libc = "0.2"

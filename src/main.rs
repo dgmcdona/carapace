@@ -1,43 +1,41 @@
 extern crate termion;
 extern crate dirs;
+extern crate signal_hook;
+extern crate libc;
 
 mod prompt;
 mod builtin;
+mod command;
+
+use command::{ CommandType };
 
 fn main() -> std::io::Result<()> {
     loop {
         prompt::print_prompt()?;
         let mut cmdline = String::new();
-        let cmdline_result = std::io::stdin().read_line(&mut cmdline);
-        match cmdline_result {
-            Ok(_n) => {
-            }
-            Err(e) => {
-                println!("Error parsing command line: {}", e);
-            }
-        }
-        let argv: Vec<&str> = cmdline.split_whitespace().collect();
-        if !builtin::builtin_cmd(&argv){
-
-        }
+        std::io::stdin().read_line(&mut cmdline)
+            .expect("Error reading command line.");
+        eval(&cmdline[..]);
     }
 }
 
+fn eval(cmdline: &str) {
+    let argv: Vec<&str> = cmdline.split_whitespace().collect();
+    let command = command::parse_command(argv).unwrap();
+    match command {
+        CommandType::Builtin(_) => {
+
+        },
+        CommandType::Foreground(_) => {
+
+        },
+        CommandType::Background(_) => {
+
+        },
+    }
+}
 
 /*
-
-fn sigchld_handler(){
-
-}
-
-fn sigtstp_handler(){
-
-}
-
-fn sigint_handler(){
-
-}
-
 fn do_redirect(){
 
 }
@@ -57,9 +55,4 @@ fn deletejob(){
 fn listjobs(){
 
 }
-
-fn parseline(){
-
-}
-
 */
