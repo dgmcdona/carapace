@@ -20,8 +20,7 @@ fn main() -> std::io::Result<()> {
 }
 
 fn eval(cmdline: &str) {
-    let argv: Vec<&str> = cmdline.split_whitespace().collect();
-    let command = command::parse_command(argv).unwrap();
+    let command = command::parse_command(cmdline).unwrap();
     match command {
         CommandType::Builtin(_) => {
 

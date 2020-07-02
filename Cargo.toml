@@ -11,3 +11,4 @@ termion = "*"
 dirs = "2.0.2"
 signal-hook = "0.1.16"
 libc = "0.2"
+tokio = { version = "0.2", features = [ "process" ] }
