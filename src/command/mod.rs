@@ -1,6 +1,5 @@
 extern crate tokio;
 
-use tokio::process::Command;
 use std::io::Write;
 use std::io::stdout;
 use crate::builtin;
@@ -12,7 +11,7 @@ pub enum CommandType<'a> {
 }
 
 pub fn parse_command(cmdline: &str) -> Result<CommandType, Box<dyn std::error::Error>> {
-    let argv: Vec<&str> = cmdline.split_whitespace().collect();
+    let mut argv: Vec<&str> = cmdline.split_whitespace().collect();
     match argv[0] {
         "exit" => {
             std::process::exit(0);
@@ -34,7 +33,9 @@ pub fn parse_command(cmdline: &str) -> Result<CommandType, Box<dyn std::error::E
             print!("{}{}", termion::clear::All, termion::cursor::Goto(1,1)); 
             Ok(CommandType::Builtin(argv))
         },
-        _ if argv[argv.len() -1] == "&" => {
+        _ if argv.contains(&"&") => {
+            argv.retain(|&arg| arg != "&");
+            println!("{:?}", argv);
             Ok(CommandType::Background(argv))
         },
         _ => {
