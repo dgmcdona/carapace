@@ -4,15 +4,18 @@ use std::io::Write;
 use std::io::stdout;
 use crate::builtin;
 
-pub enum CommandType<'a> {
-    Builtin(Vec<&'a str>),
-    Foreground(Vec<&'a str>),
-    Background(Vec<&'a str>),
+pub enum CommandType {
+    Builtin(Vec<String>),
+    Foreground(Vec<String>),
+    Background(Vec<String>),
 }
 
 pub fn parse_command(cmdline: &str) -> Result<CommandType, Box<dyn std::error::Error>> {
-    let mut argv: Vec<&str> = cmdline.split_whitespace().collect();
-    match argv[0] {
+    let mut argv: Vec<String> = cmdline.split_whitespace()
+        .into_iter()
+        .map(|arg| { String::from(arg) })
+        .collect();
+    match argv[0].as_ref() {
         "exit" => {
             std::process::exit(0);
         },
@@ -33,8 +36,8 @@ pub fn parse_command(cmdline: &str) -> Result<CommandType, Box<dyn std::error::E
             print!("{}{}", termion::clear::All, termion::cursor::Goto(1,1)); 
             Ok(CommandType::Builtin(argv))
         },
-        _ if argv.contains(&"&") => {
-            argv.retain(|&arg| arg != "&");
+        _ if argv.contains(&String::from("&")) => {
+            argv.retain(|arg| arg != "&");
             println!("{:?}", argv);
             Ok(CommandType::Background(argv))
         },

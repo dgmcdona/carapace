@@ -1,5 +1,5 @@
-mod prompt;
-mod builtin;
-mod command;
-mod signals;
-mod jobs;
+pub mod prompt;
+pub mod builtin;
+pub mod command;
+pub mod signals;
+pub mod jobs;
